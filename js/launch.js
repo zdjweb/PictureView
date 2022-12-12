@@ -2,6 +2,7 @@
     // 配置对象
     const config = {
         get(text) {
+            console.log(text);
             const newConfig = JSON.parse(text);
             for (const i in newConfig) {
                 config[i] = newConfig[i];
