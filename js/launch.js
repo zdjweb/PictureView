@@ -57,10 +57,7 @@
                 }
             }
             image.list.pop();
-            config.get(`{
-                "pageSize": 5
-            }
-            `);
+            ajax.get('ui-config.json', config.get);
         },
         create() {
             for (let i = image.element.length; i < page.size; i++) {
@@ -172,6 +169,32 @@
     };
 
 
+    // 发送Ajax请求
+    const ajax = {
+        init(xhr, callback) {
+            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    callback(xhr.responseText);
+                }
+            };
+            return xhr;
+        },
+        get(path, callback, args = null) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', path + ['', '?' + args][+!!args]);
+            this.init(xhr, callback);
+            xhr.send();
+        },
+        post(path, callback, args = null) {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', path);
+            this.init(xhr, callback);
+            xhr.send(args);
+        }
+    };
+
+
     // 全屏按钮
     const fullScreenBtn = $('#fullScreenBtn');
     // 文本容器
@@ -190,82 +213,61 @@
     const btnBox = $('#btnBox');
 
 
-    document.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        alert('该网页展示的图片禁止下载');
+    // 点击全屏
+    fullScreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            $('html').requestFullscreen();
+            fullScreenBtn.style.display = 'none';
+        }
     });
-    fullScreenBtn.style.display = 'none';
+
+
+    // 非全屏时显示全屏按钮
+    window.addEventListener('resize', () => {
+        if (!document.fullscreenElement) {
+            fullScreenBtn.style.display = 'block';
+        } else {
+            fullScreenBtn.style.display = 'none';
+        }
+    });
 
 
     // 点击刷新
     refreshBtn.addEventListener('click', () => {
-        image.get(`./image/0655c2a84be9269d8d76c77df7f5d08900e52c7d.jpg
-        ./image/0cc250aaf8b7de81a762b346cddd23b52dc69f2c.jpg
-        ./image/19f7b905e0e2394df866f4dc146d20c20a891ebc.jpg
-        ./image/23aa3d56b6a30f8a20d5893e609696fd96beb386.jpg
-        ./image/251ab2a15b32c9fa6b035875b68cf131c941d4fd.jpg
-        ./image/35db33532417f83ff516072a22d6fb4cf33b1b8c.jpg
-        ./image/574e569d44087c75e41a33552a9745d4e07cb12b.jpg
-        ./image/75aa4835c28c43e8d5c88bd4cb9ed9c4538ca7b9.jpg
-        ./image/8f0f01375b5049e0aa604c7eb11caa535a92e0ec.jpg
-        ./image/aa435db0553e61b9367f46a700f2c8a3b35afea9.jpg
-        ./image/d5f0c0bdc80f211b66b9b5831814843c1e51844f.jpg
-        ./image/e1b1a2accf1a91351b16c4a49ec3d95172fc72e1.jpg
-        ./image/ee59c9abbaf8693a6f1637e1e129a763348e86de.jpg
-        ./image/0655c2a84be9269d8d76c77df7f5d08900e52c7d.jpg
-        ./image/0cc250aaf8b7de81a762b346cddd23b52dc69f2c.jpg
-        ./image/19f7b905e0e2394df866f4dc146d20c20a891ebc.jpg
-        ./image/23aa3d56b6a30f8a20d5893e609696fd96beb386.jpg
-        ./image/251ab2a15b32c9fa6b035875b68cf131c941d4fd.jpg
-        ./image/35db33532417f83ff516072a22d6fb4cf33b1b8c.jpg
-        ./image/574e569d44087c75e41a33552a9745d4e07cb12b.jpg
-        ./image/75aa4835c28c43e8d5c88bd4cb9ed9c4538ca7b9.jpg
-        ./image/8f0f01375b5049e0aa604c7eb11caa535a92e0ec.jpg
-        ./image/aa435db0553e61b9367f46a700f2c8a3b35afea9.jpg
-        ./image/d5f0c0bdc80f211b66b9b5831814843c1e51844f.jpg
-        ./image/e1b1a2accf1a91351b16c4a49ec3d95172fc72e1.jpg
-        ./image/ee59c9abbaf8693a6f1637e1e129a763348e86de.jpg
-        `);
+        ajax.post('getImage', image.get);
     });
 
 
     // 点击下载
     downloadBtn.addEventListener('click', () => {
-        alert('该网页展示的图片禁止下载');
+        const a  = document.createElement('a');
+        a.href = mainImage.src;
+        src_split = mainImage.src.split('/');
+        a.download = 'PictureView-' + src_split[src_split.length - 1];
+        a.click();
     });
 
 
     // 点击删除
     deleteBtn.addEventListener('click', () => {
-        alert('静态版页面无此功能！');
+        let tips = document.querySelector('#tips');
+        if (!tips) {
+            tips = document.createElement('div');
+            tips.id = 'tips';
+            Object.assign(tips.style, {
+                position: 'absolute',
+                display: 'none',
+                top: '35vh',
+                left: '35vw',
+                width: '30vw',
+                height: '30vh',
+                background: '#223344'
+            });
+            document.body.appendChild(tips);
+        };
+        tips.style.display = 'block';
     });
 
 
-    image.get(`./image/0655c2a84be9269d8d76c77df7f5d08900e52c7d.jpg
-    ./image/0cc250aaf8b7de81a762b346cddd23b52dc69f2c.jpg
-    ./image/19f7b905e0e2394df866f4dc146d20c20a891ebc.jpg
-    ./image/23aa3d56b6a30f8a20d5893e609696fd96beb386.jpg
-    ./image/251ab2a15b32c9fa6b035875b68cf131c941d4fd.jpg
-    ./image/35db33532417f83ff516072a22d6fb4cf33b1b8c.jpg
-    ./image/574e569d44087c75e41a33552a9745d4e07cb12b.jpg
-    ./image/75aa4835c28c43e8d5c88bd4cb9ed9c4538ca7b9.jpg
-    ./image/8f0f01375b5049e0aa604c7eb11caa535a92e0ec.jpg
-    ./image/aa435db0553e61b9367f46a700f2c8a3b35afea9.jpg
-    ./image/d5f0c0bdc80f211b66b9b5831814843c1e51844f.jpg
-    ./image/e1b1a2accf1a91351b16c4a49ec3d95172fc72e1.jpg
-    ./image/ee59c9abbaf8693a6f1637e1e129a763348e86de.jpg
-    ./image/0655c2a84be9269d8d76c77df7f5d08900e52c7d.jpg
-    ./image/0cc250aaf8b7de81a762b346cddd23b52dc69f2c.jpg
-    ./image/19f7b905e0e2394df866f4dc146d20c20a891ebc.jpg
-    ./image/23aa3d56b6a30f8a20d5893e609696fd96beb386.jpg
-    ./image/251ab2a15b32c9fa6b035875b68cf131c941d4fd.jpg
-    ./image/35db33532417f83ff516072a22d6fb4cf33b1b8c.jpg
-    ./image/574e569d44087c75e41a33552a9745d4e07cb12b.jpg
-    ./image/75aa4835c28c43e8d5c88bd4cb9ed9c4538ca7b9.jpg
-    ./image/8f0f01375b5049e0aa604c7eb11caa535a92e0ec.jpg
-    ./image/aa435db0553e61b9367f46a700f2c8a3b35afea9.jpg
-    ./image/d5f0c0bdc80f211b66b9b5831814843c1e51844f.jpg
-    ./image/e1b1a2accf1a91351b16c4a49ec3d95172fc72e1.jpg
-    ./image/ee59c9abbaf8693a6f1637e1e129a763348e86de.jpg
-    `);
+    ajax.post('getImage', image.get);
 }
