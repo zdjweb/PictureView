@@ -64,14 +64,20 @@
             for (let i = image.element.length; i < page.size; i++) {
                 const newImage = document.createElement('div');
                 newImage.className = 'imageBtn';
-                const img = document.createElement('img');
+                const img = document.createElement('canvas'),
+                imgS = new SPicture({
+                    container: img,
+                    background: '#112233',
+                    position: 'center',
+                    scale: 'inside'
+                });
                 newImage.addEventListener('click', () => {
                     page.code = i;
-                    mainImage.src = img.src;
+                    s.src = imgS.src;
                     textBox.innerHTML = `第${page.code + 1 + page.now * page.size}张`;
                 });
                 newImage.setSrc = (src) => {
-                    img.src = src;
+                    imgS.src = src;
                 };
                 newImage.appendChild(img);
                 image.element.push(newImage);
@@ -196,8 +202,6 @@
     };
 
 
-    // 全屏按钮
-    const fullScreenBtn = $('#fullScreenBtn');
     // 文本容器
     const textBox = $('#textBox');
     // 刷新按钮
@@ -214,24 +218,13 @@
     const btnBox = $('#btnBox');
 
 
-    // 点击全屏
-    fullScreenBtn.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
-            $('html').requestFullscreen();
-            fullScreenBtn.style.display = 'none';
-        }
+    const s = new SPicture({
+        container: document.querySelector('#mainImageBox'),
+        background: '#112233',
+        src: './image/0655c2a84be9269d8d76c77df7f5d08900e52c7d.jpg',
+        position: 'center',
+        scale: 'inside'
     });
-
-
-    // 非全屏时显示全屏按钮
-    window.addEventListener('resize', () => {
-        if (!document.fullscreenElement) {
-            fullScreenBtn.style.display = 'block';
-        } else {
-            fullScreenBtn.style.display = 'none';
-        }
-    });
-
 
     // 点击刷新
     refreshBtn.addEventListener('click', () => {
