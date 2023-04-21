@@ -101,10 +101,10 @@
                 if (i == pageCode) {
                     page.code = pageCode;
                     if (image.list.length) {
-                        mainImage.src = image.list[code];
+                        s.src = image.list[code];
                         textBox.innerHTML = `第${page.code + 1 + page.now * page.size}张`;
                     } else {
-                        mainImage.src = '';
+                        s.src = '';
                         textBox.innerHTML = '';
                     }
                     btn.setStyle();
@@ -235,8 +235,8 @@
     // 点击下载
     downloadBtn.addEventListener('click', () => {
         const a  = document.createElement('a');
-        a.href = mainImage.src;
-        src_split = mainImage.src.split('/');
+        a.href = s.src;
+        src_split = s.src.split('/');
         a.download = 'PictureView-' + src_split[src_split.length - 1];
         a.click();
     });
