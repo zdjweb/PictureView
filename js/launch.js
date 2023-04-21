@@ -13,9 +13,8 @@
             page.check();
             image.set();
         }
-    };
-    // 页面对象
-    const page = {
+    },
+    page = {
         size: 0,
         num: 0,
         now: 0,
@@ -39,9 +38,8 @@
                 }
             }
         }
-    };
-    // 图片对象
-    const image = {
+    },
+    image = {
         list: [],
         element: [],
         get(text) {
@@ -121,9 +119,8 @@
                 }
             }
         }
-    }
-    // 按钮对象
-    const btn = {
+    },
+    btn = {
         element: [],
         create() {
             for (let i = btn.element.length; i < page.num; i++) {
@@ -163,8 +160,7 @@
                 }
             }
         }
-    }
-
+    };
 
     // 获取元素
     const $ = (selectors, index = -1) => {
@@ -174,7 +170,6 @@
         }
         return element[index];
     };
-
 
     // 发送Ajax请求
     const ajax = {
@@ -201,7 +196,6 @@
         }
     };
 
-
     // 文本容器
     const textBox = $('#textBox');
     // 刷新按钮
@@ -217,7 +211,6 @@
     // 按钮容器
     const btnBox = $('#btnBox');
 
-
     const s = new SPicture({
         container: document.querySelector('#mainImageBox'),
         background: '#112233',
@@ -231,7 +224,6 @@
         ajax.post('getImage', image.get);
     });
 
-
     // 点击下载
     downloadBtn.addEventListener('click', () => {
         const a  = document.createElement('a');
@@ -240,7 +232,6 @@
         a.download = 'PictureView-' + src_split[src_split.length - 1];
         a.click();
     });
-
 
     // 点击删除
     deleteBtn.addEventListener('click', () => {
@@ -261,7 +252,6 @@
         };
         tips.style.display = 'block';
     });
-
 
     ajax.post('getImage', image.get);
 }

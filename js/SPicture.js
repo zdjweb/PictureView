@@ -167,8 +167,7 @@ const SPicture = (() => {
         set src(newSrc) {
             src.set(this, newSrc);
             image.set(this, null);
-            drawBackground(canvas, background);
-            drawImage(canvas, src);
+            this.draw();
         }
         get position() {
             return position.get(this);
@@ -181,6 +180,7 @@ const SPicture = (() => {
                 const canvas = this.canvas = canvasInit();
                 positionSet(position);
                 scaleSet(scale);
+                this.background = background;
                 window.addEventListener('DOMContentLoaded', () => {
                     container.appendChild(canvas);
                 });
@@ -195,6 +195,11 @@ const SPicture = (() => {
                     drawImage(canvas, src);
                 });
             }
+        }
+        draw() {
+            const canvas = this.canvas;
+            drawBackground(canvas, this.background);
+            drawImage(canvas, this.src);
         }
     }
 })();
